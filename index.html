@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Snootle — a pixel pet that watches Claude work</title>
+<meta name="description" content="A tiny native Mac desktop pet. Reacts to your typing, takes naps, and tells you when Claude Code needs you. Corgi, shiba, frenchie, hedgehog, axolotl, chinchilla.">
+<link rel="icon" href="assets/corgi-0-happy.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #D6E4FF;
+  --sky-deep: #B9CEF5;
+  --ink: #2B1D16;
+  --ink-soft: #5A463B;
+  --corgi: #E08A3C;
+  --corgi-deep: #B0652A;
+  --pink: #F7C9D3;
+  --paper: #FFFFFF;
+  --floor: #A9BFE8;
+  --px: "Silkscreen", ui-monospace, monospace;
+  --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--sky);
+  color: var(--ink);
+  font: 1.0625rem/1.6 var(--body);
+}
+img.px { image-rendering: pixelated; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--corgi-deep); outline-offset: 3px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- hero: a little desktop ---------- */
+.desk {
+  position: relative;
+  min-height: 640px;
+  background:
+    radial-gradient(1200px 500px at 70% -10%, #EAF1FF 0%, transparent 60%),
+    linear-gradient(var(--sky) 0%, var(--sky-deep) 100%);
+  overflow: hidden;
+  border-bottom: 3px solid var(--ink);
+}
+.menubar {
+  display: flex; justify-content: space-between; align-items: center;
+  height: 30px; padding: 0 14px;
+  background: rgba(255,255,255,.55);
+  backdrop-filter: blur(10px);
+  font-size: .8125rem;
+}
+.menubar .right { display: flex; gap: 14px; align-items: center; }
+.menubar .paw { font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.hero-copy { padding-top: 64px; max-width: 620px; }
+.wordmark {
+  font-family: var(--px); font-weight: 700;
+  font-size: clamp(3.5rem, 11vw, 7.5rem);
+  line-height: .9; letter-spacing: -.02em; margin: 0;
+  text-shadow: 4px 4px 0 var(--paper);
+}
+.lede { font-size: 1.3125rem; line-height: 1.45; margin: 22px 0 28px; max-width: 30em; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn {
+  font: 700 1rem var(--body); text-decoration: none;
+  padding: 13px 20px; border: 3px solid var(--ink); border-radius: 0;
+  background: var(--paper); color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform .08s, box-shadow .08s;
+}
+.btn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.primary { background: var(--corgi); }
+.fine { font-size: .875rem; color: var(--ink-soft); margin-top: 14px; }
+
+.floor { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; background: var(--floor); border-top: 3px solid var(--ink); }
+.stage { position: absolute; left: 0; right: 0; bottom: 64px; height: 240px; pointer-events: none; }
+.pet { position: absolute; bottom: -4px; width: 160px; }
+.pet img { width: 160px; height: 136px; }
+.bubble {
+  position: absolute; bottom: 134px; left: 50%; transform: translateX(-50%);
+  white-space: nowrap; background: var(--paper); border: 2px solid var(--ink);
+  border-radius: 8px; padding: 3px 10px; font: 700 .8125rem ui-monospace, Menlo, monospace;
+}
+.bubble:empty { display: none; }
+.pet img.fx { position: absolute; bottom: 104px; width: 24px; height: auto; }
+
+/* ---------- sections ---------- */
+section { padding: 88px 0; }
+h2 {
+  font-family: var(--px); font-weight: 400; font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.1; margin: 0 0 14px; letter-spacing: -.01em;
+}
+.intro { max-width: 36em; margin: 0 0 44px; font-size: 1.125rem; }
+
+.claude { background: var(--paper); border-bottom: 3px solid var(--ink); }
+.turn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; list-style: none; padding: 0; margin: 0; }
+.turn li { border-left: 3px solid var(--ink); padding-left: 18px; }
+.turn .shot { height: 170px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; }
+.turn .shot .say { font: 700 .8125rem ui-monospace, Menlo, monospace; border: 2px solid var(--ink); border-radius: 8px; padding: 2px 9px; margin-bottom: 6px; background: var(--paper); }
+.turn img { width: 136px; height: 116px; }
+.turn h3 { margin: 12px 0 4px; font-size: 1.125rem; }
+.turn p { margin: 0; color: var(--ink-soft); }
+.setup { overflow-wrap: anywhere; margin-top: 44px; padding: 16px 18px; background: var(--sky); border: 2px dashed var(--ink); max-width: 40em; }
+.setup code { font: .9375rem ui-monospace, Menlo, monospace; }
+
+.cast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
+.critter img { width: 160px; height: 136px; margin-left: -12px; }
+.critter .ground { border-top: 3px solid var(--ink); padding-top: 10px; }
+.critter h3 { margin: 0; font-size: 1.1875rem; }
+.critter p { margin: 2px 0 10px; color: var(--ink-soft); font-size: .9375rem; }
+.coats { display: flex; gap: 8px; }
+.coats button {
+  width: 26px; height: 26px; border: 2px solid var(--ink); border-radius: 0; cursor: pointer; padding: 0;
+}
+.coats button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+.tag { font-size: .8125rem; font-weight: 700; margin-left: 6px; padding: 0 6px; border: 2px solid var(--ink); background: var(--pink); vertical-align: 2px; }
+
+.also { background: var(--pink); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+.also dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 48px; margin: 0; }
+.also dt { font-weight: 700; font-size: 1.125rem; }
+.also dd { margin: 2px 0 0; max-width: 32em; }
+
+.price { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 760px; }
+.plan { border: 3px solid var(--ink); background: var(--paper); padding: 26px; }
+.plan.pro { box-shadow: 8px 8px 0 var(--corgi); }
+.plan h3 { font-family: var(--px); font-weight: 400; font-size: 1.5rem; margin: 0; }
+.plan .cost { font-size: 2.25rem; font-weight: 700; margin: 6px 0 12px; }
+.plan .cost small { font-size: 1rem; font-weight: 400; color: var(--ink-soft); }
+.plan ul { padding-left: 1.1em; margin: 0 0 22px; }
+.plan li { margin: 4px 0; }
+
+footer { padding: 40px 0 60px; font-size: .9375rem; color: var(--ink-soft); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+@media (max-width: 760px) {
+  .desk { min-height: 600px; }
+  .hero-copy { padding-top: 36px; }
+  .turn, .cast, .also dl, .price { grid-template-columns: 1fr; }
+  .cast { grid-template-columns: 1fr 1fr; }
+  .critter img { width: 128px; height: 109px; }
+  .stage { height: 200px; }
+  .pet, .pet img { width: 120px; }
+  .pet img { height: 102px; }
+  .bubble { bottom: 104px; }
+  .pet img.fx { bottom: 80px; width: 18px; }
+  .menubar .hide-sm { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="desk">
+  <div class="menubar" aria-hidden="true">
+    <span><strong></strong>&nbsp; Finder&nbsp;&nbsp; <span class="hide-sm">File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span></span>
+    <span class="right"><span class="paw">🐾 <span id="pomo">🍅 18:42</span></span><span class="hide-sm">Fri 4:20 PM</span></span>
+  </div>
+
+  <div class="wrap hero-copy">
+    <h1 class="wordmark">Snootle</h1>
+    <p class="lede">A tiny pixel pet that lives on your Mac. It naps while you're away, cheers you on while you type, and tells you the moment Claude Code needs you.</p>
+    <div class="ctas">
+      <a class="btn primary" href="https://github.com/rohith1125/snootle/releases/latest/download/Snootle.dmg">Download for Mac</a>
+      <a class="btn" href="#pricing">Get all six pets</a>
+    </div>
+    <p class="fine">Free for the corgi. macOS 14 Sonoma or later. Native, no Electron.</p>
+  </div>
+
+  <div class="stage" aria-hidden="true">
+    <div class="pet" id="walker"><img class="px" id="walker-img" src="assets/corgi-0-walk0.png" alt=""></div>
+    <div class="pet" id="watcher" style="left:62%">
+      <div class="bubble" id="watcher-say">snootle: editing…</div>
+      <img class="px fx" id="watcher-fx" src="assets/icon-dots.png" alt="" style="left:100px">
+      <img class="px" id="watcher-img" src="assets/axolotl-0-think.png" alt="">
+    </div>
+    <div class="pet" style="left:84%"><img class="px" src="assets/chinchilla-0-sit.png" alt=""></div>
+  </div>
+  <div class="floor"></div>
+</header>
+
+<main>
+  <section class="claude">
+    <div class="wrap">
+      <h2>It watches Claude work so you don't have to</h2>
+      <p class="intro">Snootle listens to Claude Code's hooks, right on your Mac. Start a long task, go read something, and let the pet tap you on the shoulder.</p>
+      <ol class="turn">
+        <li>
+          <div class="shot"><span class="say">myapp: running commands…</span><img class="px" src="assets/shiba-0-think.png" alt="Shiba looking up, thinking"></div>
+          <h3>While it works</h3>
+          <p>A bubble says what Claude is doing: reading, editing, running commands.</p>
+        </li>
+        <li>
+          <div class="shot"><span class="say">myapp needs permission</span><img class="px" src="assets/shiba-0-alert.png" alt="Shiba jumping up, alarmed"></div>
+          <h3>When it's stuck on you</h3>
+          <p>The pet jumps up the second Claude waits for a yes. No more finding a prompt that sat there for ten minutes.</p>
+        </li>
+        <li>
+          <div class="shot"><span class="say">myapp: done!</span><img class="px" src="assets/shiba-0-done.png" alt="Shiba leaping happily"></div>
+          <h3>When the turn is done</h3>
+          <p>A happy hop and a little sparkle. Works across several sessions at once.</p>
+        </li>
+      </ol>
+      <p class="setup">Setup is one click: <strong>paw menu → Connect Claude Code</strong>. Or from a terminal: <code>Snootle --connect-claude</code></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Pick your pet</h2>
+      <p class="intro">Six animals, four coats each, three sizes. Each one has its own trick.</p>
+      <div class="cast" id="cast"></div>
+    </div>
+  </section>
+
+  <section class="also">
+    <div class="wrap">
+      <h2>Small, and a little bit useful</h2>
+      <dl>
+        <div><dt>Reacts to you</dt><dd>Paws along while you type and sweats when you're on a roll. Flick the cursor and it gives chase. Rub the cursor over it for hearts.</dd></div>
+        <div><dt>Pick it up</dt><dd>Drag it anywhere. Let go and it drops back to the bottom of your screen.</dd></div>
+        <div><dt>Focus timer</dt><dd>A 25/5 Pomodoro with the countdown in your menu bar. The pet tells you when to take a break.</dd></div>
+        <div><dt>Stretch reminders</dt><dd>Counts time you actually spend at the computer, so stepping away resets it.</dd></div>
+        <div><dt>Light on your Mac</dt><dd>Written in Swift with SpriteKit. Slows to 12 frames a second while it sleeps.</dd></div>
+        <div><dt>Private</dt><dd>No telemetry and no accounts. It counts key presses but never sees which keys.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <h2>Free corgi, one-time Pro</h2>
+      <p class="intro">Every feature is free. Pro adds the other five animals.</p>
+      <div class="price">
+        <div class="plan">
+          <h3>Free</h3>
+          <p class="cost">$0</p>
+          <ul>
+            <li>The corgi, in all four coats</li>
+            <li>Claude Code status</li>
+            <li>Focus timer and stretch reminders</li>
+          </ul>
+          <a class="btn" href="https://github.com/rohith1125/snootle/releases/latest/download/Snootle.dmg">Download for Mac</a>
+        </div>
+        <div class="plan pro">
+          <h3>Pro</h3>
+          <p class="cost">$4.99 <small>once</small></p>
+          <ul>
+            <li>All six animals, 24 coats</li>
+            <li>New animals as they arrive</li>
+            <li>Activate on your own Macs</li>
+          </ul>
+          <a class="btn primary" href="https://snootle.lemonsqueezy.com/buy">Buy Snootle Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Snootle for macOS 14 and later.</span>
+    <span><a href="https://github.com/rohith1125/snootle">Source and releases on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+const PETS = [
+  { id: "corgi", name: "Corgi", trick: "Sploots flat on the floor", coats: ["#E08A3C", "#3A2E2A", "#B5793F", "#F3D6A4"], free: true },
+  { id: "shiba", name: "Shiba Inu", trick: "Does the shiba scream", coats: ["#D9783A", "#2F2724", "#C0814A", "#F4E2C4"] },
+  { id: "frenchie", name: "French Bulldog", trick: "Frog-splats when it's comfy", coats: ["#D8A76E", "#4A3A30", "#7C8590", "#F7F2EA"] },
+  { id: "hedgehog", name: "Hedgehog", trick: "Curls into a spiky ball", coats: ["#7A6656", "#F2ECE4", "#B27B4E", "#4E3628"] },
+  { id: "axolotl", name: "Axolotl", trick: "Smiles and blows bubbles", coats: ["#F7C9D3", "#6D7A4E", "#F3D27A", "#3B3A48"] },
+  { id: "chinchilla", name: "Chinchilla", trick: "Rolls around in a dust bath", coats: ["#9EA3AA", "#EDEDEA", "#D9C2A0", "#3A3B40"] },
+];
+const COAT_NAMES = {
+  corgi: ["Red & White", "Tricolor", "Sable", "Fluffy Cream"],
+  shiba: ["Red", "Black & Tan", "Sesame", "Cream"],
+  frenchie: ["Fawn", "Brindle", "Blue", "Pied"],
+  hedgehog: ["Salt & Pepper", "Albino", "Cinnamon", "Chocolate"],
+  axolotl: ["Leucistic", "Wild Type", "Golden", "Melanoid"],
+  chinchilla: ["Standard Grey", "White Mosaic", "Beige", "Black Velvet"],
+};
+
+const cast = document.getElementById("cast");
+for (const p of PETS) {
+  const el = document.createElement("article");
+  el.className = "critter";
+  el.innerHTML = `
+    <img class="px" src="assets/${p.id}-0-sit.png" alt="${p.name}, ${COAT_NAMES[p.id][0]} coat">
+    <div class="ground">
+      <h3>${p.name}${p.free ? '<span class="tag">Free</span>' : ""}</h3>
+      <p>${p.trick}</p>
+      <div class="coats" role="group" aria-label="${p.name} coats"></div>
+    </div>`;
+  const img = el.querySelector("img"), row = el.querySelector(".coats");
+  p.coats.forEach((hex, i) => {
+    const b = document.createElement("button");
+    b.style.background = hex;
+    b.setAttribute("aria-label", COAT_NAMES[p.id][i]);
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", () => {
+      img.src = `assets/${p.id}-${i}-sit.png`;
+      img.alt = `${p.name}, ${COAT_NAMES[p.id][i]} coat`;
+      row.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    });
+    row.appendChild(b);
+  });
+  cast.appendChild(el);
+}
+
+// Hero: corgi wanders, axolotl acts out a Claude turn.
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const walker = document.getElementById("walker"), wimg = document.getElementById("walker-img");
+const say = document.getElementById("watcher-say"), fx = document.getElementById("watcher-fx"), aimg = document.getElementById("watcher-img");
+const states = [
+  ["snootle: reading…", "think", "dots"], ["snootle: editing…", "think", "dots"],
+  ["snootle: running commands…", "think", "dots"], ["snootle needs permission", "alert", "exclaim"],
+  ["snootle: done!", "done", "sparkle"], ["", "happy", "heart"],
+];
+if (still) {
+  walker.style.left = "10%";
+} else {
+  let x = 0.08, dir = 1, frame = 0, last = performance.now(), acc = 0;
+  function step(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const w = document.querySelector(".stage").clientWidth;
+    x += dir * dt * 0.035;
+    if (x > 0.42 || x < 0.02) dir *= -1;
+    walker.style.left = (x * w) + "px";
+    walker.style.transform = dir < 0 ? "scaleX(-1)" : "";
+    acc += dt;
+    if (acc > 0.125) { acc = 0; frame = (frame + 1) % 4; wimg.src = `assets/corgi-0-walk${frame}.png`; }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  let s = 0;
+  setInterval(() => {
+    s = (s + 1) % states.length;
+    const [text, pose, icon] = states[s];
+    say.textContent = text;
+    aimg.src = `assets/axolotl-0-${pose}.png`;
+    fx.src = `assets/icon-${icon}.png`;
+  }, 1800);
+}
+</script>
+</body>
+</html>
