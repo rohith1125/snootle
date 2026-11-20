@@ -37,6 +37,8 @@ Snootle checks for updates by itself.
 - Pomodoro timer in the menu bar with custom focus/break lengths, levels and a daily recap
 - Stretch reminders where your pet stretches with you and suggests a new exercise each time
 - Name your pets and feed them (they'll ask when they're hungry)
+- Nine animals now, including a cat, a bunny and a duckling
+- Every pet has its own voice (barks, meows, quacks…) for when Claude finishes or needs you, when you click, or on a key you pick
 - Knows how your Mac feels: sleepy on low battery, panting when it's hot, still in Low Power Mode
 - **⌃⌥P** hides all pets (handy for screen sharing)
 
