@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Snootle — a pixel pet that watches Claude work</title>
-<meta name="description" content="A tiny native Mac desktop pet. Reacts to your typing, takes naps, and tells you when Claude Code needs you. Corgi, shiba, frenchie, hedgehog, axolotl, chinchilla.">
+<meta name="description" content="A tiny native Mac desktop pet. Reacts to your typing, takes naps, and tells you when Claude Code needs you. Corgi, shiba, frenchie, hedgehog, axolotl, chinchilla, cat, bunny, duckling.">
 <link rel="icon" href="assets/corgi-0-happy.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,6 +117,8 @@ h2 {
   width: 26px; height: 26px; border: 2px solid var(--ink); border-radius: 0; cursor: pointer; padding: 0;
 }
 .coats button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+.hear { font-size: .9rem; line-height: 1; padding: 2px 5px; margin-left: 4px; border: 2px solid var(--ink); background: var(--paper); cursor: pointer; vertical-align: 2px; }
+.hear:active { transform: translate(1px, 1px); }
 .tag { font-size: .8125rem; font-weight: 700; margin-left: 6px; padding: 0 6px; border: 2px solid var(--ink); background: var(--pink); vertical-align: 2px; }
 
 .also { background: var(--pink); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
@@ -167,7 +169,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
       <a class="btn primary" href="https://github.com/rohith1125/snootle/releases/latest/download/Snootle.dmg">Download for Mac</a>
       <a class="btn" href="#pricing">See pricing</a>
     </div>
-    <p class="fine">Version 0.3.0 is out: name and feed your pet, custom focus timer, stretch along with it. <a href="https://github.com/rohith1125/snootle/releases/tag/v0.3.0">See what's new</a>.<br>Free beta with every pet unlocked. macOS 14 or later, Apple Silicon and Intel. Native, no Electron.</p>
+    <p class="fine">Version 0.4.0 is out: a cat, a bunny and a duckling join, and every pet has a voice. <a href="https://github.com/rohith1125/snootle/releases/tag/v0.4.0">See what's new</a>.<br>Free beta with every pet unlocked. macOS 14 or later, Apple Silicon and Intel. Native, no Electron.</p>
   </div>
 
   <div class="stage" aria-hidden="true">
@@ -211,7 +213,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   <section>
     <div class="wrap">
       <h2>Pick your pet</h2>
-      <p class="intro">Six animals, four coats each, three sizes. Each one has its own trick.</p>
+      <p class="intro">Nine animals, four coats each, three sizes. Each one has its own trick and its own voice — tap 🔊 to hear it.</p>
       <div class="cast" id="cast"></div>
     </div>
   </section>
@@ -229,6 +231,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
         <div><dt>Pick it up</dt><dd>Drag it anywhere. Let go and it drops back to the bottom of your screen.</dd></div>
         <div><dt>Focus timer</dt><dd>A Pomodoro with the countdown in your menu bar. Pick 15 to 90 minutes (or any length) of focus and the break you like.</dd></div>
         <div><dt>Stretch with your pet</dt><dd>When it's time, your pet does a full stretch and suggests a different exercise each time. Counts only time you actually spend at the computer.</dd></div>
+        <div><dt>Barks, meows and quacks</dt><dd>Every animal has its own little voice. Hear it when Claude finishes, when Claude needs you, when you click — or whenever you press a key you pick, like Return. Cats purr when you pet them. All optional.</dd></div>
         <div><dt>Name it, feed it</dt><dd>Give each pet a name. Keep its bowl topped up and it munches happily; let it get hungry and it'll ask.</dd></div>
         <div><dt>Light on your Mac</dt><dd>Written in Swift with SpriteKit. Slows to 12 frames a second while it sleeps.</dd></div>
         <div><dt>Private</dt><dd>No telemetry and no accounts. It counts key presses but never sees which keys.</dd></div>
@@ -255,7 +258,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
           <h3>Pro</h3>
           <p class="cost">$4.99 <small>once</small></p>
           <ul>
-            <li>All six animals, 24 coats</li>
+            <li>All nine animals, 36 coats</li>
             <li>New animals as they arrive</li>
             <li>Activate on your own Macs</li>
           </ul>
@@ -281,6 +284,9 @@ const PETS = [
   { id: "hedgehog", name: "Hedgehog", trick: "Curls into a spiky ball", coats: ["#7A6656", "#F2ECE4", "#B27B4E", "#4E3628"] },
   { id: "axolotl", name: "Axolotl", trick: "Smiles and blows bubbles", coats: ["#F7C9D3", "#6D7A4E", "#F3D27A", "#3B3A48"] },
   { id: "chinchilla", name: "Chinchilla", trick: "Rolls around in a dust bath", coats: ["#9EA3AA", "#EDEDEA", "#D9C2A0", "#3A3B40"] },
+  { id: "cat", name: "Cat", trick: "Makes biscuits, purrs when petted", coats: ["#F0A04B", "#2E2A2B", "#9AA0A8", "#FBF4EA"] },
+  { id: "bunny", name: "Bunny", trick: "Does a happy binky", coats: ["#FAF7F2", "#A8774F", "#8E8A88", "#2F2B2C"] },
+  { id: "duckling", name: "Duckling", trick: "Flaps its little wings", coats: ["#FFDD57", "#8C6A3E", "#FBFAF4", "#FFD21F"] },
 ];
 const COAT_NAMES = {
   corgi: ["Red & White", "Tricolor", "Sable", "Fluffy Cream"],
@@ -289,6 +295,9 @@ const COAT_NAMES = {
   hedgehog: ["Salt & Pepper", "Albino", "Cinnamon", "Chocolate"],
   axolotl: ["Leucistic", "Wild Type", "Golden", "Melanoid"],
   chinchilla: ["Standard Grey", "White Mosaic", "Beige", "Black Velvet"],
+  cat: ["Orange Tabby", "Tuxedo", "Grey", "Calico"],
+  bunny: ["Snow", "Brown", "Grey Lop", "Dutch"],
+  duckling: ["Sunny", "Mallard", "Snowy", "Rubber Duck"],
 };
 
 const cast = document.getElementById("cast");
@@ -298,11 +307,14 @@ for (const p of PETS) {
   el.innerHTML = `
     <img class="px" src="assets/${p.id}-0-sit.png" alt="${p.name}, ${COAT_NAMES[p.id][0]} coat">
     <div class="ground">
-      <h3>${p.name}${p.free ? '<span class="tag">Free</span>' : ""}</h3>
+      <h3>${p.name}${p.free ? '<span class="tag">Free</span>' : ""} <button class="hear" type="button" aria-label="Hear the ${p.name}">🔊</button></h3>
       <p>${p.trick}</p>
       <div class="coats" role="group" aria-label="${p.name} coats"></div>
     </div>`;
   const img = el.querySelector("img"), row = el.querySelector(".coats");
+  el.querySelector(".hear").addEventListener("click", () => {
+    const a = new Audio(`assets/voices/${p.id}-greet.wav`); a.volume = 0.6; a.play().catch(() => {});
+  });
   p.coats.forEach((hex, i) => {
     const b = document.createElement("button");
     b.style.background = hex;
