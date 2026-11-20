@@ -55,7 +55,7 @@ a { color: inherit; }
 }
 .menubar .right { display: flex; gap: 14px; align-items: center; }
 .menubar .paw { font-weight: 700; display: flex; gap: 6px; align-items: center; }
-.hero-copy { padding-top: 64px; max-width: 620px; }
+.hero-copy { padding-top: 64px; padding-bottom: 250px; max-width: 620px; }
 .wordmark {
   font-family: var(--px); font-weight: 700;
   font-size: clamp(3.5rem, 11vw, 7.5rem);
@@ -83,6 +83,7 @@ a { color: inherit; }
   position: absolute; bottom: 134px; left: 50%; transform: translateX(-50%);
   white-space: nowrap; background: var(--paper); border: 2px solid var(--ink);
   border-radius: 8px; padding: 3px 10px; font: 700 .8125rem ui-monospace, Menlo, monospace;
+  max-width: calc(100vw - 24px); overflow: hidden; text-overflow: ellipsis; z-index: 1;
 }
 .bubble:empty { display: none; }
 .pet img.fx { position: absolute; bottom: 104px; width: 24px; height: auto; }
@@ -137,14 +138,14 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
 
 @media (max-width: 760px) {
   .desk { min-height: 600px; }
-  .hero-copy { padding-top: 36px; }
+  .hero-copy { padding-top: 36px; padding-bottom: 215px; }
   .turn, .cast, .also dl, .price { grid-template-columns: 1fr; }
   .cast { grid-template-columns: 1fr 1fr; }
   .critter img { width: 128px; height: 109px; }
   .stage { height: 200px; }
   .pet, .pet img { width: 120px; }
   .pet img { height: 102px; }
-  .bubble { bottom: 104px; }
+  .bubble { bottom: 104px; left: auto; right: 0; transform: none; font-size: .75rem; }
   .pet img.fx { bottom: 80px; width: 18px; }
   .menubar .hide-sm { display: none; }
 }
@@ -166,7 +167,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
       <a class="btn primary" href="https://github.com/rohith1125/snootle/releases/latest/download/Snootle.dmg">Download for Mac</a>
       <a class="btn" href="#pricing">See pricing</a>
     </div>
-    <p class="fine">Version 0.2.2 is out: approve Claude from your pet, up to three pets, levels. <a href="https://github.com/rohith1125/snootle/releases/tag/v0.2.2">See what's new</a>.<br>Free beta with every pet unlocked. macOS 14 or later, Apple Silicon and Intel. Native, no Electron.</p>
+    <p class="fine">Version 0.3.0 is out: name and feed your pet, custom focus timer, stretch along with it. <a href="https://github.com/rohith1125/snootle/releases/tag/v0.3.0">See what's new</a>.<br>Free beta with every pet unlocked. macOS 14 or later, Apple Silicon and Intel. Native, no Electron.</p>
   </div>
 
   <div class="stage" aria-hidden="true">
@@ -226,8 +227,9 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
         <div><dt>Levels and a daily recap</dt><dd>Your pet levels up as you finish Claude tasks, focus sessions and typing streaks. Settings shows what you got done today.</dd></div>
         <div><dt>Reacts to you</dt><dd>Paws along while you type and sweats when you're on a roll. Flick the cursor and it gives chase. Rub the cursor over it for hearts.</dd></div>
         <div><dt>Pick it up</dt><dd>Drag it anywhere. Let go and it drops back to the bottom of your screen.</dd></div>
-        <div><dt>Focus timer</dt><dd>A 25/5 Pomodoro with the countdown in your menu bar. The pet tells you when to take a break.</dd></div>
-        <div><dt>Stretch reminders</dt><dd>Counts time you actually spend at the computer, so stepping away resets it.</dd></div>
+        <div><dt>Focus timer</dt><dd>A Pomodoro with the countdown in your menu bar. Pick 15 to 90 minutes (or any length) of focus and the break you like.</dd></div>
+        <div><dt>Stretch with your pet</dt><dd>When it's time, your pet does a full stretch and suggests a different exercise each time. Counts only time you actually spend at the computer.</dd></div>
+        <div><dt>Name it, feed it</dt><dd>Give each pet a name. Keep its bowl topped up and it munches happily; let it get hungry and it'll ask.</dd></div>
         <div><dt>Light on your Mac</dt><dd>Written in Swift with SpriteKit. Slows to 12 frames a second while it sleeps.</dd></div>
         <div><dt>Private</dt><dd>No telemetry and no accounts. It counts key presses but never sees which keys.</dd></div>
       </dl>
