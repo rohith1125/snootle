@@ -34,7 +34,9 @@ Snootle checks for updates by itself.
 - **Claude Code:** shows what Claude is doing, celebrates when it's done, looks sad on rate limits,
   lets you **Allow once / Deny** permission prompts from a card above the pet, and jumps to the
   Claude window when you click it
-- Pomodoro timer in the menu bar, stretch reminders, levels and a daily recap
+- Pomodoro timer in the menu bar with custom focus/break lengths, levels and a daily recap
+- Stretch reminders where your pet stretches with you and suggests a new exercise each time
+- Name your pets and feed them (they'll ask when they're hungry)
 - Knows how your Mac feels: sleepy on low battery, panting when it's hot, still in Low Power Mode
 - **⌃⌥P** hides all pets (handy for screen sharing)
 
