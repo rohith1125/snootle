@@ -39,6 +39,10 @@ Snootle checks for updates by itself.
 - Name your pets and feed them (they'll ask when they're hungry)
 - Nine animals now, including a cat, a bunny and a duckling
 - Every pet has its own voice (barks, meows, quacks…) for when Claude finishes or needs you, when you click, or on a key you pick
+- Collectible hats, play ball, daily streaks, and calm pets during focus sessions
+- Stand-up and water reminders with their own animations (fully adjustable)
+- Welcome-back recap of what each Claude session did, plus a menu-bar count of working/waiting sessions
+- The permission card always shows the complete request before you can allow it
 - Knows how your Mac feels: sleepy on low battery, panting when it's hot, still in Low Power Mode
 - **⌃⌥P** hides all pets (handy for screen sharing)
 
